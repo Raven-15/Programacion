@@ -3,9 +3,9 @@
 #include <stdio.h>
 
 int main (){
-	int num, di, suma = 0; 
+	int n, di, suma = 0; 
 	printf("Angelica digite un numero entero: ");
-	scanf("%d", &num);
+	scanf("%d", &n);
 	
 	while (n != 0) {
         di = n % 10;

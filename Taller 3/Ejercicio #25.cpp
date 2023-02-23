@@ -20,6 +20,6 @@ int main(){
 	}
 	
 	int prom = suma/cont;
-	print("El promedio entero de los digitos del numero ingresado es:%d\n", prom);
+	printf("El promedio entero de los dígitos de %d es %d.\n", n, prom);
 	return 0;
 }
