@@ -5,7 +5,7 @@
 int main() {
     int numero, suma = 0, conteo = 0;
 
-    printf("Angelica digite el numero 0 para terminar: ");
+    printf("Angelica digite el numero 0 para finalizar: ");
 
     while (1) {
         scanf("%d", &numero);
