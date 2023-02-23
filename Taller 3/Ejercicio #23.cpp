@@ -3,13 +3,13 @@
 #include <stdio.h>
 
 int main (){
-	int num, suma = 0, i;
+	int n, suma = 0, i;
 	printf("Ingrese un numero entero: ");
-	scanf("%d", &num);
+	scanf("%d", &n);
 	
-	while (num > 0){
-		suma += num % 10;
-		num /= 10;
+	while (n > 0){
+		suma += n % 10;
+		n /= 10;
 	}
 	for (i = 2; i < suma; i++){
 		if (suma % i == 0){
