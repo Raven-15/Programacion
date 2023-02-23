@@ -1,22 +1,21 @@
-//Ejercicio #2
+//Ejercicio #1
 
 #include <stdio.h>
+#include <string.h>
 
-int main() {
-    int numero;
-
-    printf("Angelica escriba un numero entero: ");
-    scanf("%d", &numero);
-
-    for (int i = 1; i <= numero; i++) {
-        if (i % 2 == 0) {
-            printf("%d ", i);
-        }
-    }
-
-    return 0;
+int main(){
+	
+	int number;
+	printf("Ingrese el numero entero: \n");
+	scanf("%d", &number);
+	
+	if(number % 2 == 0){
+		printf("El numero ingresado es par");
+	}else{
+		printf("El numero ingresado es impar");
+	}
+	
+	return 0;
+	    
+	
 }
-
-
-
-
