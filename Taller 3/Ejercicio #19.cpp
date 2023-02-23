@@ -3,21 +3,21 @@
 #include <stdio.h>
 
 int main (){
-	int num, i, numPrimo = 1;
+	int n, i, numPrimo = 1;
 	
-	printf("Angelica digiste un numero entero: ");
-	scanf("%d", &num);
+	printf("Angelica digite un numero entero: ");
+	scanf("%d", &n);
 	
-	for (i = 2; i<= num / 2; i++){
-		if (num % i == 0){
+	for (i = 2; i<= n / 2; i++){
+		if (n % i == 0){
 			numPrimo = 0;
 		}
 	}
 	
 	if (numPrimo == 1){
-		printf("%d es primo. \n", num);
+		printf("%d es primo. \n", n);
 	}else{
-		printf("%d no es primo. \n", num);
+		printf("%d no es primo. \n", n);
 	}
 	return 0;
 }
