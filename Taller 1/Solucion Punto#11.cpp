@@ -1,19 +1,18 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-int main (){
-	
-	int Y2, Y1, X2, X1, m;
-	
-	printf("Ingrese las coordenadas del punto en X (X2,X1):");
-	scanf("%i %i",&X2, &X1);
-	
-	printf("Ingrese las coordenadas del punto en Y (Y2,Y1):");
-	scanf("%i %i",&Y2, &Y1);
-	
-	m=(Y2-Y1)/(X2-X1);
-	
-	printf("La pendiente de la recta es: %i \n", m);
-	
-	return 0;	
+int main() {
+   int x1, y1, x2, y2;
+   float pendiente;
+
+   printf("Ingrese las coordenadas del primer punto (x1, y1): ");
+   scanf("%d %d", &x1, &y1);
+
+   printf("Ingrese las coordenadas del segundo punto (x2, y2): ");
+   scanf("%d %d", &x2, &y2);
+
+   pendiente = (float)(y2 - y1) / (float)(x2 - x1);
+
+   printf("La pendiente de la recta que pasa por los puntos (%d, %d) y (%d, %d) es: %f\n", x1, y1, x2, y2, pendiente);
+
+   return 0;
 }
