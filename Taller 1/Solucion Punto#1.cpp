@@ -1,16 +1,8 @@
 #include <stdio.h>
 
-int main(){
-	int firstInt, secondInt, result;
-	printf("favor ingresar el primer numero entero: ");
-	scanf("%d" , &firstInt);
-	
-	printf("por favor ingresar el segundo entero: ");
-	scanf("%d" , &secondInt);
-	
-	//result=firsInt+secondInt;
-	printf("el resultado de esta suma es %d" , firstInt+secondInt);
-	
-	return 0;
+int main() {
+    float celsius = 35;
+    float fahrenheit = (celsius * 9/5) + 32;
+    printf("La temperatura %.1f°C es igual a %.1f°F.", celsius, fahrenheit);
+    return 0;
 }
-
