@@ -7,7 +7,7 @@ char _ascii(int num){
 }
 
 int main(){
-	int num = 223;
+	int num = 204;
 	char c = _ascii(num);
 	printf("El numero %d en ASCII es el caracter '%c'\n", num, c);
 	return 0;
