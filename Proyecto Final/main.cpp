@@ -1,11 +1,12 @@
-#include "biblioteca.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include "biblioteca.h"
 
-#define MAX_LIBROS 100
+#define MAX_LIBROS 200
 
-void agregarLibro(struct Libro *biblioteca, int *numLibros, int codigo, const char *titulo, const char *autor, int anioPublicacion) {
-    if (*numLibros < MAX_LIBROS) {
+void agregarLibro(struct Libro *biblioteca, int *numeroLibros, int codigo, const char *titulo, const char *autor, int anioPublicacion) {
+    if (*numeroLibros < MAX_LIBROS) {
         struct Libro nuevoLibro;
         nuevoLibro.codigo = codigo;
         strncpy(nuevoLibro.titulo, titulo, MAX_TITULO);
@@ -13,8 +14,8 @@ void agregarLibro(struct Libro *biblioteca, int *numLibros, int codigo, const ch
         nuevoLibro.anioPublicacion = anioPublicacion;
         nuevoLibro.disponible = 1;
 
-        biblioteca[*numLibros] = nuevoLibro;
-        (*numLibros)++;
+        biblioteca[*numeroLibros] = nuevoLibro;
+        (*numeroLibros)++;
 
         printf("Libro agregado correctamente.\n");
     } else {
@@ -22,22 +23,22 @@ void agregarLibro(struct Libro *biblioteca, int *numLibros, int codigo, const ch
     }
 }
 
-void mostrarBiblioteca(struct Libro *biblioteca, int numLibros) {
+void mostrarBiblioteca(struct Libro *biblioteca, int numeroLibros) {
     printf("Biblioteca:\n");
-    for (int i = 0; i < numLibros; i++) {
+    for (int i = 0; i < numeroLibros; i++) {
         printf("Código: %d\n", biblioteca[i].codigo);
         printf("Título: %s\n", biblioteca[i].titulo);
         printf("Autor: %s\n", biblioteca[i].autor);
-        printf("Año de publicación: %d\n", biblioteca[i].anioPublicacion);
-        printf("Disponible: %s\n", biblioteca[i].disponible ? "Sí" : "No");
+        printf("Año en que se publico el libro: %d\n", biblioteca[i].anioPublicacion);
+        printf("Disponibilidad del libro: %s\n", biblioteca[i].disponible ? "Sí" : "No");
         printf("------------------------------\n");
     }
 }
 
-void buscarLibro(struct Libro *biblioteca, int numLibros, const char *titulo) {
+void buscarLibro(struct Libro *biblioteca, int numeroLibros, const char *titulo) {
     int encontrado = 0;
     printf("Resultado de la búsqueda:\n");
-    for (int i = 0; i < numLibros; i++) {
+    for (int i = 0; i < numeroLibros; i++) {
         if (strcmp(biblioteca[i].titulo, titulo) == 0) {
             printf("Código: %d\n", biblioteca[i].codigo);
             printf("Título: %s\n", biblioteca[i].titulo);
@@ -53,9 +54,9 @@ void buscarLibro(struct Libro *biblioteca, int numLibros, const char *titulo) {
     }
 }
 
-void prestarLibro(struct Libro *biblioteca, int numLibros, int codigo, struct Usuario *usuarios, int numUsuarios) {
+void prestarLibro(struct Libro *biblioteca, int numeroLibros, int codigo, struct Usuario *usuarios, int numUsuarios) {
     int libroEncontrado = 0;
-    for (int i = 0; i < numLibros; i++) {
+    for (int i = 0; i < numeroLibros; i++) {
         if (biblioteca[i].codigo == codigo) {
             libroEncontrado = 1;
             if (biblioteca[i].disponible) {
@@ -74,13 +75,13 @@ void prestarLibro(struct Libro *biblioteca, int numLibros, int codigo, struct Us
                     printf("No hay usuarios disponibles para prestar el libro.\n");
                 }
             } else {
-                printf("El libro no está disponible en este momento.\n");
+                printf("El libro no esta disponible en este momento.\n");
             }
             break;
         }
     }
     if (!libroEncontrado) {
-        printf("No se encontró un libro con el código especificado.\n");
+        printf("No se encontro ningun libro con el codigo especificado.\n");
     }
 }
 
@@ -102,16 +103,16 @@ void devolverLibro(struct Libro *biblioteca, int numLibros, int codigo, struct U
                     }
                 }
                 if (!usuarioEncontrado) {
-                    printf("No se encontró un usuario asociado a este libro.\n");
+                    printf("No se ha encontrado ningun usuario asociado a este codigo.\n");
                 }
             } else {
-                printf("El libro ya está disponible en la biblioteca.\n");
+                printf("El libro ya esta disponible en la biblioteca.\n");
             }
             break;
         }
     }
     if (!libroEncontrado) {
-        printf("No se encontró un libro con el código especificado.\n");
+        printf("a este codigo no se encuentro ningun libro asociado.\n");
     }
 }
 
@@ -124,9 +125,9 @@ void agregarUsuario(struct Usuario *usuarios, int *numUsuarios, int id, const ch
         usuarios[*numUsuarios] = nuevoUsuario;
         (*numUsuarios)++;
 
-        printf("Usuario agregado correctamente.\n");
+        printf("Usuario registrado correctamente.\n");
     } else {
-        printf("No se pueden agregar más usuarios. La lista de usuarios está llena.\n");
+        printf("No se pueden agregar mas usuarios. La lista de usuarios esta llena.\n");
     }
 }
 
@@ -144,13 +145,13 @@ void guardarBiblioteca(struct Libro *biblioteca, int numLibros, const char *arch
     if (file) {
         fwrite(biblioteca, sizeof(struct Libro), numLibros, file);
         fclose(file);
-        printf("Datos de la biblioteca guardados correctamente en el archivo.\n");
+        printf("Datos de la biblioteca guardados correctamente.\n");
     } else {
-        printf("No se pudo abrir el archivo para guardar los datos de la biblioteca.\n");
+        printf("No se pudo abrir el archivo para guardar los datos.\n");
     }
 }
 
-void cargarBiblioteca(struct Libro *biblioteca, int *numLibros, const char *archivo) {
+void cargarBiblioteca(struct Libro *biblioteca, int *numeroLibros, const char *archivo) {
     FILE *file = fopen(archivo, "rb");
     if (file) {
         fread(biblioteca, sizeof(struct Libro), MAX_LIBROS, file);

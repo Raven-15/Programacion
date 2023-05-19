@@ -1,9 +1,9 @@
 #ifndef BIBLIOTECA_H
 #define BIBLIOTECA_H
 
-#define MAX_TITULO 100
-#define MAX_AUTOR 50
-#define MAX_USUARIOS 100
+#define MAX_TITULO 200
+#define MAX_AUTOR 100
+#define MAX_USUARIOS 200
 
 struct Libro {
     int codigo;

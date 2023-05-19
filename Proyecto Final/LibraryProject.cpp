@@ -1,5 +1,7 @@
-#include "biblioteca.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "biblioteca.h"
 
 int main() {
     struct Libro biblioteca[MAX_LIBROS];
@@ -32,4 +34,3 @@ int main() {
 
     return 0;
 }
-
