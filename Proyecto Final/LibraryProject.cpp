@@ -3,6 +3,8 @@
 #include <string.h>
 #include "biblioteca.h"
 
+
+
 int main() {
     struct Libro biblioteca[MAX_LIBROS];
     int numLibros = 0;
@@ -10,12 +12,12 @@ int main() {
     struct Usuario usuarios[MAX_USUARIOS];
     int numUsuarios = 0;
 
-    agregarLibro(biblioteca, &numLibros, 1, "El gran Gatsby", "F. Scott Fitzgerald", 1925);
-    agregarLibro(biblioteca, &numLibros, 2, "1984", "George Orwell", 1949);
-    agregarLibro(biblioteca, &numLibros, 3, "Matar a un ruiseñor", "Harper Lee", 1960);
+    agregarLibro(biblioteca, &numLibros, 1, "Del amor y otros demonios", "Gabriel Garcia Marquez", 1994);
+    agregarLibro(biblioteca, &numLibros, 2, "Ana Frank", "Melissa Muller", 1998);
+    agregarLibro(biblioteca, &numLibros, 3, "Don Quijore de la Mancha", "Miguel de Cervantes", 1604 - 1605);
 
-    agregarUsuario(usuarios, &numUsuarios, 1, "Juan Pérez");
-    agregarUsuario(usuarios, &numUsuarios, 2, "María Gómez");
+    agregarUsuario(usuarios, &numUsuarios, 1, "Angelica Piedrahita");
+    agregarUsuario(usuarios, &numUsuarios, 2, "Sara A. Caballero");
 
     prestarLibro(biblioteca, numLibros, 1, usuarios, numUsuarios);
     prestarLibro(biblioteca, numLibros, 2, usuarios, numUsuarios);

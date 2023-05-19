@@ -3,7 +3,11 @@
 #include <string.h>
 #include "biblioteca.h"
 
+
 #define MAX_LIBROS 200
+#define MAX_TITULO 200
+#define MAX_AUTOR 100
+#define MAX_USUARIOS 200
 
 void agregarLibro(struct Libro *biblioteca, int *numeroLibros, int codigo, const char *titulo, const char *autor, int anioPublicacion) {
     if (*numeroLibros < MAX_LIBROS) {
