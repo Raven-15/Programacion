@@ -12,7 +12,7 @@ int main() {
     struct Usuario usuarios[MAX_USUARIOS];
     int numUsuarios = 0;
 
-    agregarLibro(biblioteca, &numLibros, 1, "Del amor y otros demonios", "Gabriel Garcia Marquez", 1994);
+    agregarLibro(biblioteca, &numLibros, 1, "Del Amor y Otros Demonios", "Gabriel Garcia Marquez", 1994);
     agregarLibro(biblioteca, &numLibros, 2, "Ana Frank", "Melissa Muller", 1998);
     agregarLibro(biblioteca, &numLibros, 3, "Don Quijore de la Mancha", "Miguel de Cervantes", 1604 - 1605);
 
