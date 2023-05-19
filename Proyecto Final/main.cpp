@@ -54,7 +54,7 @@ void buscarLibro(struct Libro *biblioteca, int numeroLibros, const char *titulo)
         }
     }
     if (!encontrado) {
-        printf("No se encontró ningún libro con el título especificado.\n");
+        printf("No se encontro ningún libro con el título especificado.\n");
     }
 }
 
