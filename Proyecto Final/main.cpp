@@ -1,82 +1,80 @@
-// Libreria
-
+#include "biblioteca.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
+#define MAX_LIBROS 100
 
-// Definición de la estructura Producto
-struct Producto {
-    int codigo;
-    char nombre[50];
-    float precio;
-    int stock;
-};
-
-// Función para agregar un producto
-void agregarProducto(struct Producto *inventario, int *numProductos) {
-    struct Producto nuevoProducto;
-    
-    printf("Ingrese el código del producto: ");
-    scanf("%d", &nuevoProducto.codigo);
-    
-    printf("Ingrese el nombre del producto: ");
-    scanf("%s", nuevoProducto.nombre);
-    
-    printf("Ingrese el precio del producto: ");
-    scanf("%f", &nuevoProducto.precio);
-    
-    printf("Ingrese el stock del producto: ");
-    scanf("%d", &nuevoProducto.stock);
-    
-    inventario[*numProductos] = nuevoProducto;
-    (*numProductos)++;
-    
-    printf("Producto agregado correctamente.\n");
+void agregarLibro(struct Libro *biblioteca, int *numLibros, int codigo, const char *titulo, const char *autor, int anioPublicacion) {
+    if (*numLibros < MAX_LIBROS) {
+        struct Libro nuevoLibro;
+        nuevoLibro.codigo = codigo;
+        strncpy(nuevoLibro.titulo, titulo, MAX_TITULO);
+        strncpy(nuevoLibro.autor, autor, MAX_AUTOR);
+        nuevoLibro.anioPublicacion = anioPublicacion;
+        nuevoLibro.disponible = 1;
+        
+        biblioteca[*numLibros] = nuevoLibro;
+        (*numLibros)++;
+        
+        printf("Libro agregado correctamente.\n");
+    } else {
+        printf("No se pueden agregar más libros. La biblioteca está llena.\n");
+    }
 }
 
-// Función para mostrar el inventario
-void mostrarInventario(struct Producto *inventario, int numProductos) {
-    printf("Inventario de la papelería:\n");
-    
-    for (int i = 0; i < numProductos; i++) {
-        printf("Código: %d\n", inventario[i].codigo);
-        printf("Nombre: %s\n", inventario[i].nombre);
-        printf("Precio: %.2f\n", inventario[i].precio);
-        printf("Stock: %d\n", inventario[i].stock);
+void mostrarBiblioteca(struct Libro *biblioteca, int numLibros) {
+    printf("Biblioteca:\n");
+    for (int i = 0; i < numLibros; i++) {
+        printf("Código: %d\n", biblioteca[i].codigo);
+        printf("Título: %s\n", biblioteca[i].titulo);
+        printf("Autor: %s\n", biblioteca[i].autor);
+        printf("Año de publicación: %d\n", biblioteca[i].anioPublicacion);
+        printf("Disponible: %s\n", biblioteca[i].disponible ? "Sí" : "No");
         printf("------------------------------\n");
     }
 }
 
-int main() {
-    struct Producto inventario[100];
-    int numProductos = 0;
-    int opcion;
-    
-    do {
-        printf("=== PAPERERÍA ===\n");
-        printf("1. Agregar producto\n");
-        printf("2. Mostrar inventario\n");
-        printf("3. Salir\n");
-        printf("Ingrese una opción: ");
-        scanf("%d", &opcion);
-        
-        switch (opcion) {
-            case 1:
-                agregarProducto(inventario, &numProductos);
-                break;
-            case 2:
-                mostrarInventario(inventario, numProductos);
-                break;
-            case 3:
-                printf("Saliendo del programa...\n");
-                break;
-            default:
-                printf("Opción inválida. Inténtelo de nuevo.\n");
-                break;
+void buscarLibro(struct Libro *biblioteca, int numLibros, const char *titulo) {
+    printf("Resultados de la búsqueda:\n");
+    for (int i = 0; i < numLibros; i++) {
+        if (strcmp(biblioteca[i].titulo, titulo) == 0) {
+            printf("Código: %d\n", biblioteca[i].codigo);
+            printf("Título: %s\n", biblioteca[i].titulo);
+            printf("Autor: %s\n", biblioteca[i].autor);
+            printf("Año de publicación: %d\n", biblioteca[i].anioPublicacion);
+            printf("Disponible: %s\n", biblioteca[i].disponible ? "Sí" : "No");
+            printf("------------------------------\n");
         }
-    } while (opcion != 3);
-    
-    return 0;
+    }
+}
+
+void prestarLibro(struct Libro *biblioteca, int numLibros, int codigo) {
+    for (int i = 0; i < numLibros; i++) {
+        if (biblioteca[i].codigo == codigo) {
+            if (biblioteca[i].disponible) {
+                biblioteca[i].disponible = 0;
+                printf("Libro prestado correctamente.\n");
+            } else {
+                printf("El libro no está disponible en este momento.\n");
+            }
+            return;
+        }
+    }
+    printf("No se encontró un libro con el código especificado.\n");
+}
+
+void devolverLibro(struct Libro *biblioteca, int numLibros, int codigo) {
+    for (int i = 0; i < numLibros; i++) {
+        if (biblioteca[i].codigo == codigo) {
+            if (!biblioteca[i].disponible) {
+                biblioteca[i].disponible = 1;
+                printf("Libro devuelto correctamente.\n");
+            } else {
+                printf("El libro ya está disponible.\n");
+            }
+            return;
+        }
+    }
+    printf("No se encontró un libro con el código especificado.\n");
 }
 
