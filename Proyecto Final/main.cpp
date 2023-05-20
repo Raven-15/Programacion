@@ -58,14 +58,14 @@ void buscarLibro(struct Libro *biblioteca, int numeroLibros, const char *titulo)
     }
 }
 
-void prestarLibro(struct Libro *biblioteca, int numeroLibros, int codigo, struct Usuario *usuarios, int numUsuarios) {
+void prestarLibro(struct Libro *biblioteca, int numeroLibros, int codigo, struct Usuario *usuarios, int numeroUsuarios) {
     int libroEncontrado = 0;
     for (int i = 0; i < numeroLibros; i++) {
         if (biblioteca[i].codigo == codigo) {
             libroEncontrado = 1;
             if (biblioteca[i].disponible) {
                 int usuarioEncontrado = 0;
-                for (int j = 0; j < numUsuarios; j++) {
+                for (int j = 0; j < numeroUsuarios; j++) {
                     if (usuarios[j].id == 0) {
                         printf("El libro se ha prestado al usuario \"%s\".\n", usuarios[j].nombre);
                         usuarios[j].id = codigo;
@@ -89,14 +89,14 @@ void prestarLibro(struct Libro *biblioteca, int numeroLibros, int codigo, struct
     }
 }
 
-void devolverLibro(struct Libro *biblioteca, int numLibros, int codigo, struct Usuario *usuarios, int numUsuarios) {
+void devolverLibro(struct Libro *biblioteca, int numeroLibros, int codigo, struct Usuario *usuarios, int numeroUsuarios) {
     int libroEncontrado = 0;
     for (int i = 0; i < numLibros; i++) {
         if (biblioteca[i].codigo == codigo) {
             libroEncontrado = 1;
             if (!biblioteca[i].disponible) {
                 int usuarioEncontrado = 0;
-                for (int j = 0; j < numUsuarios; j++) {
+                for (int j = 0; j < numeroUsuarios; j++) {
                     if (usuarios[j].id == codigo) {
                         printf("El libro \"%s\" ha sido devuelto.\n", usuarios[j].nombre);
                         usuarios[j].id = 0;
@@ -120,7 +120,7 @@ void devolverLibro(struct Libro *biblioteca, int numLibros, int codigo, struct U
     }
 }
 
-void agregarUsuario(struct Usuario *usuarios, int *numUsuarios, int id, const char *nombre) {
+void agregarUsuario(struct Usuario *usuarios, int *numeroUsuarios, int id, const char *nombre) {
     if (*numUsuarios < MAX_USUARIOS) {
         struct Usuario nuevoUsuario;
         nuevoUsuario.id = id;
@@ -137,17 +137,17 @@ void agregarUsuario(struct Usuario *usuarios, int *numUsuarios, int id, const ch
 
 void mostrarUsuarios(struct Usuario *usuarios, int numUsuarios) {
     printf("Usuarios:\n");
-    for (int i = 0; i < numUsuarios; i++) {
+    for (int i = 0; i < numeroUsuarios; i++) {
         printf("ID: %d\n", usuarios[i].id);
         printf("Nombre: %s\n", usuarios[i].nombre);
         printf("------------------------------\n");
     }
 }
 
-void guardarBiblioteca(struct Libro *biblioteca, int numLibros, const char *archivo) {
+void guardarBiblioteca(struct Libro *biblioteca, int numeroLibros, const char *archivo) {
     FILE *file = fopen(archivo, "wb");
     if (file) {
-        fwrite(biblioteca, sizeof(struct Libro), numLibros, file);
+        fwrite(biblioteca, sizeof(struct Libro), numeroLibros, file);
         fclose(file);
         printf("Datos de la biblioteca guardados correctamente.\n");
     } else {
@@ -160,17 +160,17 @@ void cargarBiblioteca(struct Libro *biblioteca, int *numeroLibros, const char *a
     if (file) {
         fread(biblioteca, sizeof(struct Libro), MAX_LIBROS, file);
         fclose(file);
-        printf("Datos de la biblioteca cargados correctamente desde el archivo.\n");
-        *numLibros = MAX_LIBROS;
+        printf("Datos guardados correctamnete.\n");
+        *numeroLibros = MAX_LIBROS;
     } else {
-        printf("No se pudo abrir el archivo para cargar los datos de la biblioteca.\n");
+        printf("No se guardaron los datos.\n");
     }
 }
 
-void guardarUsuarios(struct Usuario *usuarios, int numUsuarios, const char *archivo) {
+void guardarUsuarios(struct Usuario *usuarios, int numeroUsuarios, const char *archivo) {
     FILE *file = fopen(archivo, "wb");
     if (file) {
-        fwrite(usuarios, sizeof(struct Usuario), numUsuarios, file);
+        fwrite(usuarios, sizeof(struct Usuario), numeroUsuarios, file);
         fclose(file);
         printf("Datos de los usuarios guardados correctamente en el archivo.\n");
     } else {
@@ -178,13 +178,13 @@ void guardarUsuarios(struct Usuario *usuarios, int numUsuarios, const char *arch
     }
 }
 
-void cargarUsuarios(struct Usuario *usuarios, int *numUsuarios, const char *archivo) {
+void cargarUsuarios(struct Usuario *usuarios, int *numeroUsuarios, const char *archivo) {
     FILE *file = fopen(archivo, "rb");
     if (file) {
         fread(usuarios, sizeof(struct Usuario), MAX_USUARIOS, file);
         fclose(file);
         printf("Datos de los usuarios cargados correctamente desde el archivo.\n");
-        *numUsuarios = MAX_USUARIOS;
+        *numeroUsuarios = MAX_USUARIOS;
     } else {
         printf("No se pudo abrir el archivo para cargar los datos de los usuarios.\n");
     }
