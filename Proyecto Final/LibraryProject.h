@@ -7,15 +7,15 @@
 #define MAX_USUARIOS 200
 
 struct Libro {
-    int codigo;
-    char titulo[MAX_TITULO];
-    char autor[MAX_AUTOR];
-    int anioPublicacion;
-    int disponible;
+	int codigo;
+	anioPublicacion;
+	int disponible;
+	char titulo [MAX_TITULO];
+	char autor [MAX_AUTOR];
 };
 
 struct Usuario {
-    int id;
+    int cedula;
     char nombre[MAX_AUTOR];
 };
 
@@ -32,4 +32,5 @@ void guardarUsuarios(struct Usuario *usuarios, int numeroUsuarios, const char *a
 void cargarUsuarios(struct Usuario *usuarios, int *numeroUsuarios, const char *archivo);
 
 #endif
+
 
