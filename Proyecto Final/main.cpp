@@ -9,6 +9,22 @@
 #define MAX_AUTOR 100
 #define MAX_USUARIOS 200
 
+
+struct Ususrio {
+	int cedula
+	char nombre [MAX_AUTOR];
+	
+};
+
+struct Libro {
+	int codigo;
+	anioPublicacion;
+	int disponible;
+	char titulo [MAX_TITULO];
+	char autor [MAX_AUTOR];
+};
+
+
 void agregarLibro(struct Libro *biblioteca, int *numeroLibros, int codigo, const char *titulo, const char *autor, int anioPublicacion) {
     if (*numeroLibros < MAX_LIBROS) {
         struct Libro nuevoLibro;
@@ -34,7 +50,7 @@ void mostrarBiblioteca(struct Libro *biblioteca, int numeroLibros) {
         printf("Título: %s\n", biblioteca[i].titulo);
         printf("Autor: %s\n", biblioteca[i].autor);
         printf("Año en que se publico el libro: %d\n", biblioteca[i].anioPublicacion);
-        printf("Disponibilidad del libro: %s\n", biblioteca[i].disponible ? "Sí" : "No");
+        printf("Disponibilidad del libro: %s\n", biblioteca[i].disponible ? "Si esta disponible" : "No esta disponible");
         printf("------------------------------\n");
     }
 }
@@ -126,7 +142,7 @@ void agregarUsuario(struct Usuario *usuarios, int *numeroUsuarios, int id, const
         nuevoUsuario.id = id;
         strncpy(nuevoUsuario.nombre, nombre, MAX_AUTOR);
 
-        usuarios[*numUsuarios] = nuevoUsuario;
+        usuarios[*numeroUsuarios] = nuevoUsuario;
         (*numUsuarios)++;
 
         printf("Usuario registrado correctamente.\n");
