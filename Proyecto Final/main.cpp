@@ -10,7 +10,7 @@
 #define MAX_USUARIOS 200
 
 
-struct Ususrio {
+struct Usuario {
 	int cedula
 	char nombre [MAX_AUTOR];
 	
@@ -31,8 +31,8 @@ void agregarLibro(struct Libro *biblioteca, int *numeroLibros, int codigo, const
         nuevoLibro.codigo = codigo;
         strncpy(nuevoLibro.titulo, titulo, MAX_TITULO);
         strncpy(nuevoLibro.autor, autor, MAX_AUTOR);
-        nuevoLibro.anioPublicacion = anioPublicacion;
         nuevoLibro.disponible = 1;
+        nuevoLibro.anioPublicacion = anioPublicacion;
 
         biblioteca[*numeroLibros] = nuevoLibro;
         (*numeroLibros)++;
@@ -45,48 +45,48 @@ void agregarLibro(struct Libro *biblioteca, int *numeroLibros, int codigo, const
 
 void mostrarBiblioteca(struct Libro *biblioteca, int numeroLibros) {
     printf("Biblioteca:\n");
-    for (int i = 0; i < numeroLibros; i++) {
-        printf("Código: %d\n", biblioteca[i].codigo);
-        printf("Título: %s\n", biblioteca[i].titulo);
-        printf("Autor: %s\n", biblioteca[i].autor);
-        printf("Año en que se publico el libro: %d\n", biblioteca[i].anioPublicacion);
-        printf("Disponibilidad del libro: %s\n", biblioteca[i].disponible ? "Si esta disponible" : "No esta disponible");
-        printf("------------------------------\n");
+    for (int j = 0; j < numeroLibros; j++) {
+    	printf("Autor: %s\n", biblioteca[j].autor);
+        printf("Código: %d\n", biblioteca[j].codigo);
+        printf("Título: %s\n", biblioteca[ij.titulo);
+        printf("Año en que se publico el libro: %d\n", biblioteca[j].anioPublicacion);
+        printf("Disponibilidad del libro: %s\n", biblioteca[j].disponible ? "Si esta disponible" : "No esta disponible");
+        printf("\n--------------------------\n");
     }
 }
 
 void buscarLibro(struct Libro *biblioteca, int numeroLibros, const char *titulo) {
     int encontrado = 0;
     printf("Resultado de la búsqueda:\n");
-    for (int i = 0; i < numeroLibros; i++) {
-        if (strcmp(biblioteca[i].titulo, titulo) == 0) {
-            printf("Código: %d\n", biblioteca[i].codigo);
-            printf("Título: %s\n", biblioteca[i].titulo);
-            printf("Autor: %s\n", biblioteca[i].autor);
-            printf("Año de publicación: %d\n", biblioteca[i].anioPublicacion);
-            printf("Disponible: %s\n", biblioteca[i].disponible ? "Sí" : "No");
-            printf("------------------------------\n");
+    for (int j = 0; j < numeroLibros; j++) {
+        if (strcmp(biblioteca[j].titulo, titulo) == 0) {
+        	printf("Autor: %s\n", biblioteca[j].autor);
+            printf("Código: %d\n", biblioteca[j].codigo);
+            printf("Título: %s\n", biblioteca[j].titulo);
+            printf("Año de publicación: %d\n", biblioteca[j].anioPublicacion);
+            printf("Disponible: %s\n", biblioteca[j].disponible ? "Si esta disponible" : "No esta disponible");
+            printf("\n--------------------------\n");
             encontrado = 1;
         }
     }
     if (!encontrado) {
-        printf("No se encontro ningún libro con el título especificado.\n");
+        printf("No se encontro el  libro con el titulo ingresado.\n");
     }
 }
 
 void prestarLibro(struct Libro *biblioteca, int numeroLibros, int codigo, struct Usuario *usuarios, int numeroUsuarios) {
     int libroEncontrado = 0;
-    for (int i = 0; i < numeroLibros; i++) {
-        if (biblioteca[i].codigo == codigo) {
+    for (int j = 0; j < numeroLibros; j++) {
+        if (biblioteca[j].codigo == codigo) {
             libroEncontrado = 1;
-            if (biblioteca[i].disponible) {
+            if (biblioteca[j].disponible) {
                 int usuarioEncontrado = 0;
-                for (int j = 0; j < numeroUsuarios; j++) {
-                    if (usuarios[j].id == 0) {
-                        printf("El libro se ha prestado al usuario \"%s\".\n", usuarios[j].nombre);
-                        usuarios[j].id = codigo;
-                        strncpy(usuarios[j].nombre, biblioteca[i].titulo, MAX_TITULO);
-                        biblioteca[i].disponible = 0;
+                for (int i = 0; i < numeroUsuarios; i++) {
+                    if (usuarios[i].id == 0) {
+                        printf("El libro se ha prestado al usuario \"%s\".\n", usuarios[i].nombre);
+                        usuarios[i].id = codigo;
+                        strncpy(usuarios[i].nombre, biblioteca[i].titulo, MAX_TITULO);
+                        biblioteca[j].disponible = 0;
                         usuarioEncontrado = 1;
                         break;
                     }
@@ -107,23 +107,23 @@ void prestarLibro(struct Libro *biblioteca, int numeroLibros, int codigo, struct
 
 void devolverLibro(struct Libro *biblioteca, int numeroLibros, int codigo, struct Usuario *usuarios, int numeroUsuarios) {
     int libroEncontrado = 0;
-    for (int i = 0; i < numLibros; i++) {
-        if (biblioteca[i].codigo == codigo) {
+    for (int j = 0; j < numLibros; j++) {
+        if (biblioteca[j].codigo == codigo) {
             libroEncontrado = 1;
-            if (!biblioteca[i].disponible) {
+            if (!biblioteca[j].disponible) {
                 int usuarioEncontrado = 0;
-                for (int j = 0; j < numeroUsuarios; j++) {
-                    if (usuarios[j].id == codigo) {
-                        printf("El libro \"%s\" ha sido devuelto.\n", usuarios[j].nombre);
-                        usuarios[j].id = 0;
-                        usuarios[j].nombre[0] = '\0';
-                        biblioteca[i].disponible = 1;
+                for (int i = 0; i < numeroUsuarios; j++) {
+                    if (usuarios[i].id == codigo) {
+                        printf("El libro \"%s\" ha sido devuelto.\n", usuarios[i].nombre);
+                        usuarios[i].id = 0;
+                        usuarios[i].nombre[0] = '\0';
+                        biblioteca[j].disponible = 1;
                         usuarioEncontrado = 1;
                         break;
                     }
                 }
                 if (!usuarioEncontrado) {
-                    printf("No se ha encontrado ningun usuario asociado a este codigo.\n");
+                    printf("No se ha encontrado ningun usuario con el codigo especificado.\n");
                 }
             } else {
                 printf("El libro ya esta disponible en la biblioteca.\n");
@@ -132,31 +132,31 @@ void devolverLibro(struct Libro *biblioteca, int numeroLibros, int codigo, struc
         }
     }
     if (!libroEncontrado) {
-        printf("a este codigo no se encuentro ningun libro asociado.\n");
+        printf("A este codigo no se encuentro ningun libro asociado.\n");
     }
 }
 
 void agregarUsuario(struct Usuario *usuarios, int *numeroUsuarios, int id, const char *nombre) {
-    if (*numUsuarios < MAX_USUARIOS) {
+    if (*numeroUsuarios < MAX_USUARIOS) {
         struct Usuario nuevoUsuario;
         nuevoUsuario.id = id;
         strncpy(nuevoUsuario.nombre, nombre, MAX_AUTOR);
 
         usuarios[*numeroUsuarios] = nuevoUsuario;
-        (*numUsuarios)++;
+        (*numeroUsuarios)++;
 
         printf("Usuario registrado correctamente.\n");
     } else {
-        printf("No se pueden agregar mas usuarios. La lista de usuarios esta llena.\n");
+        printf("No se pueden agregar mas usuarios. La lista esta llena.\n");
     }
 }
 
 void mostrarUsuarios(struct Usuario *usuarios, int numUsuarios) {
     printf("Usuarios:\n");
-    for (int i = 0; i < numeroUsuarios; i++) {
-        printf("ID: %d\n", usuarios[i].id);
-        printf("Nombre: %s\n", usuarios[i].nombre);
-        printf("------------------------------\n");
+    for (int j = 0; j < numeroUsuarios; j++) {
+        printf("Cedula: %d\n", usuarios[j].id);
+        printf("Nombre: %s\n", usuarios[j].nombre);
+        printf("\n-------------------------\n");
     }
 }
 
