@@ -1,248 +1,293 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "biblioteca.h"
+#include <stdbool.h>//para poder usar bool
+#include "LibraryProject.h"
 
-
-#define MAX_LIBROS 200
-#define MAX_TITULO 200
-#define MAX_AUTOR 100
+#define MAX_LIBROS 200 
+#define MAX_TITULO 100 
+#define MAX_AUTOR 50 
 #define MAX_USUARIOS 200
 
-struct Usuario {
-	int cedula
-	char nombre [MAX_AUTOR];
+FILE *arc3;
+FILE *arc4;
+FILE *arc5;
+
+
+typedef struct {
+	int code;
+	char name [MAX_USUARIOS];
+	bool is_valid = false;
+}usuario;
+
+typedef struct {
+	bool is_valid = false;
+	char titulo[MAX_TITULO];
+	char autor[MAX_AUTOR];
+	char disponible;
+	int numPag;
 	
-};
+}libro;
 
-struct Libro {
-	int codigo;
-	anioPublicacion;
-	int disponible;
-	char titulo [MAX_TITULO];
-	char autor [MAX_AUTOR];
-};
+typedef struct {
+	bool is_valid = false;
+	char titulo[MAX_TITULO];
+	int code;
+	char date_start[128];
+	char date_finish[128] = "";	
+}prestamo;
 
-
-void agregarLibro(struct Libro *biblioteca, int *numeroLibros, int codigo, const char *titulo, const char *autor, int anioPublicacion) {
-    if (*numeroLibros < MAX_LIBROS) {
-        struct Libro nuevoLibro;
-        nuevoLibro.codigo = codigo;
-        strncpy(nuevoLibro.titulo, titulo, MAX_TITULO);
-        strncpy(nuevoLibro.autor, autor, MAX_AUTOR);
-        nuevoLibro.disponible = 1;
-        nuevoLibro.anioPublicacion = anioPublicacion;
-
-        biblioteca[*numeroLibros] = nuevoLibro;
-        (*numeroLibros)++;
-
-        printf("Libro agregado correctamente.\n");
-    } else {
-        printf("No se pueden agregar más libros. La biblioteca está llena.\n");
-    }
-}
-
-void mostrarBiblioteca(struct Libro *biblioteca, int numeroLibros) {
-    printf("Biblioteca:\n");
-    for (int j = 0; j < numeroLibros; j++) {
-    	printf("Autor: %s\n", biblioteca[j].autor);
-        printf("Código: %d\n", biblioteca[j].codigo);
-        printf("Título: %s\n", biblioteca[ij.titulo);
-        printf("Año en que se publico el libro: %d\n", biblioteca[j].anioPublicacion);
-        printf("Disponibilidad del libro: %s\n", biblioteca[j].disponible ? "Si esta disponible" : "No esta disponible");
-        printf("\n--------------------------\n");
-    }
-}
-
-void buscarLibro(struct Libro *biblioteca, int numeroLibros, const char *titulo) {
+libro buscarLibro(bool print) {
+	
+	char titulo[MAX_TITULO];
+	libro book;
     int encontrado = 0;
-    printf("Resultado de la búsqueda:\n");
-    for (int j = 0; j < numeroLibros; j++) {
-        if (strcmp(biblioteca[j].titulo, titulo) == 0) {
-        	printf("Autor: %s\n", biblioteca[j].autor);
-            printf("Código: %d\n", biblioteca[j].codigo);
-            printf("Título: %s\n", biblioteca[j].titulo);
-            printf("Año de publicación: %d\n", biblioteca[j].anioPublicacion);
-            printf("Disponible: %s\n", biblioteca[j].disponible ? "Si esta disponible" : "No esta disponible");
-            printf("\n--------------------------\n");
-            encontrado = 1;
-        }
-    }
+    
+	printf("Por favor ingresar el t%ctulo del libro: ", 161);
+	scanf("%s", &titulo);
+
+	arc3 = fopen("libro.txt", "r");
+	
+	if(arc3 == NULL) {
+		printf("Error al abrir el archivo.\n");
+	}else {
+		while(fread(&book, sizeof(book), 1, arc3) == 1) {
+			if(strcmp(book.titulo, titulo) == 0) {
+	        	int pos = ftell(arc3);
+	        	if(print){
+	        		printf("El puntero se encuentra en la posici%cn: %d\n", 162, pos);
+		       
+				    printf("Resultado de la b%csqueda:\n", 163);
+			    	printf("T%ctulo: %s\n", 161, book.titulo);
+			    	printf("Autor: %s\n", book.autor);
+			    	printf("N%cmero de p%cginas: %d\n", 163, 160);
+			    	printf("Disponible: %s\n", boolToString(book.disponible));
+			        printf("\n--------------------------\n");
+				}
+		        
+		    	encontrado = 1;
+		        break;
+			}
+		}
+	}
+	fclose(arc3);
+	arc3 = NULL;
+
     if (!encontrado) {
         printf("No se encontro el  libro con el titulo ingresado.\n");
     }
+    
+    return book;
 }
 
-void prestarLibro(struct Libro *biblioteca, int numeroLibros, int codigo, struct Usuario *usuarios, int numeroUsuarios) {
-    int libroEncontrado = 0;
-    for (int j = 0; j < numeroLibros; j++) {
-        if (biblioteca[j].codigo == codigo) {
-            libroEncontrado = 1;
-            if (biblioteca[j].disponible) {
-                int usuarioEncontrado = 0;
-                for (int i = 0; i < numeroUsuarios; i++) {
-                    if (usuarios[i].id == 0) {
-                        printf("El libro se ha prestado al usuario \"%s\".\n", usuarios[i].nombre);
-                        usuarios[i].id = codigo;
-                        strncpy(usuarios[i].nombre, biblioteca[i].titulo, MAX_TITULO);
-                        biblioteca[j].disponible = 0;
-                        usuarioEncontrado = 1;
-                        break;
-                    }
-                }
-                if (!usuarioEncontrado) {
-                    printf("No hay usuarios disponibles para prestar el libro.\n");
-                }
-            } else {
-                printf("El libro no esta disponible en este momento.\n");
-            }
-            break;
-        }
-    }
-    if (!libroEncontrado) {
-        printf("No se encontro ningun libro con el codigo especificado.\n");
-    }
+usuario agregarUsuario() {
+	usuario client;
+	printf("\nPor favor ingresar la identificaci%cn del cliente: ", 162);
+	scanf("%d", &client.code);
+	
+	printf("Por favor ingresar el nombre del cliente: ");
+	fflush(stdin);
+	gets(client.name);
+
+	client.is_valid = true;
+	
+	arc3 = fopen("usuario.txt", "a");
+	
+	if (arc3 == NULL ) {
+		printf("Error al abrir el archivo\n");
+		exit(EXIT_FAILURE);
+	} else {
+		fwrite(&client, sizeof(client), 1, arc3);
+		fclose(arc3);
+		arc3 = NULL;
+	}
+	
+	printf("Documento: %d\n", client.code);
+	printf("Nombre: %s\n", client.name);
+	return client;
 }
 
-void devolverLibro(struct Libro *biblioteca, int numeroLibros, int codigo, struct Usuario *usuarios, int numeroUsuarios) {
-    int libroEncontrado = 0;
-    for (int j = 0; j < numLibros; j++) {
-        if (biblioteca[j].codigo == codigo) {
-            libroEncontrado = 1;
-            if (!biblioteca[j].disponible) {
-                int usuarioEncontrado = 0;
-                for (int i = 0; i < numeroUsuarios; j++) {
-                    if (usuarios[i].id == codigo) {
-                        printf("El libro \"%s\" ha sido devuelto.\n", usuarios[i].nombre);
-                        usuarios[i].id = 0;
-                        usuarios[i].nombre[0] = '\0';
-                        biblioteca[j].disponible = 1;
-                        usuarioEncontrado = 1;
-                        break;
-                    }
-                }
-                if (!usuarioEncontrado) {
-                    printf("No se ha encontrado ningun usuario con el codigo especificado.\n");
-                }
-            } else {
-                printf("El libro ya esta disponible en la biblioteca.\n");
-            }
-            break;
-        }
-    }
-    if (!libroEncontrado) {
-        printf("A este codigo no se encuentro ningun libro asociado.\n");
-    }
+usuario buscarUsuario(int code = NULL) {
+
+    usuario client;
+    int encontrado = 0;
+	char confirmation;
+	bool print = true;
+
+	if(!code){
+		printf("Por favor ingresar la identificaci%cn del cliente: ", 162);
+		scanf("%d", &code);
+
+		printf("Est%c seguro que la identificaci%cn %d est%c correcta? Si[S]  No[N]: ", 160, 162, code, 160);
+		fflush(stdin);
+		scanf("%c", &confirmation);
+		confirmation = tuper(confirmation);
+	} else {
+		confirmation = 'S';
+		print = false;
+	}
+
+	if(confirmation == 'S') {
+
+		arc3 = fopen("usuario.txt", "rb");
+
+		if (arc3 == NULL) {
+			printf("Error al abrir el archivo\n");
+		} else {
+			while (fread(&client, sizeof(client), 1, arc3)) { 
+				
+				long pos = ftell(arc3);
+				
+				if (client.code == code) { 
+				
+				    if(print){
+						printf("Documento: %d\n", client.code);
+						printf("Nombre: %s\n", client.name);
+					}
+					
+					encontrado = 1;
+					break; 
+				}
+			}
+			fclose(arc3);
+			arc3 = NULL;
+
+			if (!encontrado) {
+				printf("No se encontr%c el cliente con el c%cdigo ingresado\n", 162, 162);
+			}
+		}
+
+	} else {
+		buscarUsuario();
+	}
+
+	return client;
+
 }
 
-void agregarUsuario(struct Usuario *usuarios, int *numeroUsuarios, int id, const char *nombre) {
-    if (*numeroUsuarios < MAX_USUARIOS) {
-        struct Usuario nuevoUsuario;
-        nuevoUsuario.id = id;
-        strncpy(nuevoUsuario.nombre, nombre, MAX_AUTOR);
+void prestarLibro() {
+	
+	char titulo[MAX_TITULO];
+	libro book;
+	int code;
+    
+    book = buscarLibro(false);
+    usuario user;
+    
+    printf("Ingrese la fecha del pr%cstamo (DD-MM-AAAA): ", 130);
+	scanf("%d-%d-%d", &prestamo.date_start.day, prestamo.date_start.moth, prestamo.date_start.year);
+    
+    if (book.is_valid) {
+    	if (book.disponible) {
+    		printf("Por favor ingresar la identificaci%cn del usuario: ", 162);
+			scanf("%d", &code);
+			user = buscarUsuario(code);
+			printf("Documento: %d\n", user.code);
+			printf("Nombre: %s\n", user.name);
+		} else {
+			printf("El libro con el t%ctulo ingresado no esta disponible.\n", 161);
+		}
+	}
+	
+    FILE *arch = fopen("prestamos.txt", "a");
+    
+    if(arch == NULL) {
+    	printf("Error al crear el archivo.\n");
+    	return;
+	}
+	
+	fprintf(arch, "T%ctulo: %s", 161, prestamo.titulo);
+	fprintf(arch, "Autor: %s", prestamo.autor);
+	fprintf(arch, "Documento del prestatario: %d", prestamo.code);
+	fprintf(arch, "Fecha de pr%cstamo", 130, prestamo.date_start);
+	
+	fclose(arch);
+	
+	printf("El pr%cstamo ha sido exitoso.\n", 130);
+}
 
-        usuarios[*numeroUsuarios] = nuevoUsuario;
-        (*numeroUsuarios)++;
-
-        printf("Usuario registrado correctamente.\n");
+void devolverLibro() {
+	char titulo[MAX_TITULO];
+    Libro book;
+    int code;
+    
+    book = buscarLibro(true);
+    Usuario usua;
+    
+    printf("Ingrese la fecha de devolución (DD-MM-AAAA): ");
+    scanf("%d-%d-%d", &prestamo.date_finish.day, &prestamo.date_finish.month, &prestamo.date_finish.year);
+    
+    if (book.is_valid) {
+        printf("Por favor ingrese la identificaci%cn del usuario: ", 162);
+        scanf("%d", &code);
+        user = buscarUsuario(code);
+        printf("Documento: %d\n", usua.code);
+        printf("Nombre: %s\n", usua.name);
     } else {
-        printf("No se pueden agregar mas usuarios. La lista esta llena.\n");
+        printf("El libro no tiene un pr%cstamo registrado.\n", 130);
+        return;
     }
+    
+    FILE *arch = fopen("devoluciones.txt", "a");
+    
+    if (arch == NULL) {
+        printf("Error al crear el archivo.\n");
+        return;
+    }
+    
+    fprintf(arch, "T%ctulo: %s\n", book.titulo);
+    fprintf(arch, "Autor: %s\n", book.autor);
+    fprintf(arch, "Documento del prestatario: %d\n", user.code);
+    fprintf(arch, "Fecha de pr%cstamo: %d-%d-%d\n", 130, prestamo.date_start.day, prestamo.date_start.month, prestamo.date_start.year);
+    fprintf(arch, "Fecha de devoluci%cn: %d-%d-%d\n", 162, prestamo.date_finish.day, prestamo.date_finish.month, prestamo.date_finish.year);
+    
+    fclose(arch);
+    
+    printf("La devoluci%cn del libro ha sido exitosa.\n", 162);
 }
 
-void mostrarUsuarios(struct Usuario *usuarios, int numUsuarios) {
-    printf("Usuarios:\n");
-    for (int j = 0; j < numeroUsuarios; j++) {
-        printf("Cedula: %d\n", usuarios[j].id);
-        printf("Nombre: %s\n", usuarios[j].nombre);
-        printf("\n-------------------------\n");
-    }
-}
-
-void guardarBiblioteca(struct Libro *biblioteca, int numeroLibros, const char *archivo) {
-    FILE *file = fopen(archivo, "wb");
-    if (file) {
-        fwrite(biblioteca, sizeof(struct Libro), numeroLibros, file);
-        fclose(file);
-        printf("Datos de la biblioteca guardados correctamente.\n");
-    } else {
-        printf("No se pudo abrir el archivo para guardar los datos.\n");
-    }
-}
-
-void cargarBiblioteca(struct Libro *biblioteca, int *numeroLibros, const char *archivo) {
-    FILE *file = fopen(archivo, "rb");
-    if (file) {
-        fread(biblioteca, sizeof(struct Libro), MAX_LIBROS, file);
-        fclose(file);
-        printf("Datos guardados correctamnete.\n");
-        *numeroLibros = MAX_LIBROS;
-    } else {
-        printf("No se guardaron los datos.\n");
-    }
-}
-
-void guardarUsuarios(struct Usuario *usuarios, int numeroUsuarios, const char *archivo) {
-    FILE *file = fopen(archivo, "wb");
-    if (file) {
-        fwrite(usuarios, sizeof(struct Usuario), numeroUsuarios, file);
-        fclose(file);
-        printf("Datos de los usuarios guardados correctamente en el archivo.\n");
-    } else {
-        printf("No se pudo abrir el archivo para guardar los datos de los usuarios.\n");
-    }
-}
-
-void cargarUsuarios(struct Usuario *usuarios, int *numeroUsuarios, const char *archivo) {
-    FILE *file = fopen(archivo, "rb");
-    if (file) {
-        fread(usuarios, sizeof(struct Usuario), MAX_USUARIOS, file);
-        fclose(file);
-        printf("Datos de los usuarios cargados correctamente desde el archivo.\n");
-        *numeroUsuarios = MAX_USUARIOS;
-    } else {
-        printf("No se pudo abrir el archivo para cargar los datos de los usuarios.\n");
-    }
-}
 
 int main() {
-	
-	struct Usuario usuarios[MAX_USUARIOS];
-    int numeroUsuarios = 0;
-	
-    struct Libro biblioteca[MAX_LIBROS];
-    int numeroLibros = 0;
-
-
-    agregarLibro(biblioteca, &numeroLibros, 1, "Del Amor y Otros Demonios", "Gabriel Garcia Marquez", 1994);
-    agregarLibro(biblioteca, &numeroLibros, 2, "Ana Frank", "Melissa Muller", 1998);
-    agregarLibro(biblioteca, &numeroLibros, 3, "Don Quijote de la Mancha", "Miguel de Cervantes", 1604 - 1605);
-
-    agregarUsuario(usuarios, &numeroUsuarios, 1, "Angelica Piedrahita");
-    agregarUsuario(usuarios, &numeroUsuarios, 2, "Sara A. Caballero");
-    agregarUsuario(usuarios, &numeroUsuarios, 2, "Francisco. C");
-
-    prestarLibro(biblioteca, numeroLibros, 1, usuarios, numeroUsuarios);
-    prestarLibro(biblioteca, numeroLibros, 2, usuarios, numeroUsuarios);
-    prestarLibro(biblioteca, numeroLibros, 3, usuarios, numeroUsuarios);
-
-    devolverLibro(biblioteca, numeroLibros, 1, usuarios, numeroUsuarios);
-
-
-    mostrarBiblioteca(biblioteca, numeroLibros);
-    mostrarUsuarios(usuarios, numeroUsuarios);
-
-    guardarBiblioteca(biblioteca, numeroLibros, "biblioteca.dat");
-    guardarUsuarios(usuarios, numeroUsuarios, "usuarios.dat");
-
-    cargarBiblioteca(biblioteca, &numeroLibros, "biblioteca.dat");
-    cargarUsuarios(usuarios, &numeroUsuarios, "usuarios.dat");
-
-    mostrarBiblioteca(biblioteca, numeroLibros);
-    mostrarUsuarios(usuarios, numeroUsuarios);
-
-    return 0;
-}
+    
+    int op;
+    
+    do {
+    	system("CLS");
+    	op = menu();
+    	
+    	switch(op){
+    		case 1:
+    			agregarLibro();
+    			break;
+    		case 2:
+    			mostrarBiblioteca();
+    			break;
+    		case 3:
+    			buscarLibro(true);
+    			break;
+    		case 4:
+    			prestarLibro();
+    			break;
+    		case 5:
+    			devolverLibro();
+    			break;
+    		case 6:
+    			agregarUsuario();
+    			break;
+    		case 7:
+    			buscarUsuario();
+    			break;
+    		case 8:
+    			printf("¡Gracias por usar el sistema de la biblioteca!\n");
+    			break;
+    		default:
+    			printf("Ha ingresado una opcion incorrecta. Solo numeros del 1 al 8!!!\n\n");
+    			break;
+		}
+		system("PAUSE");
+	}while(op != 8);
+	return 0;
+	}
     
     
 
