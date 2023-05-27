@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include "LibraryProject.h"
 
-#define MAX_LIBROS 200 
-#define MAX_TITULO 100 
-#define MAX_AUTOR 50 
+#define MAX_LIBROS 200
+#define MAX_TITULO 100
+#define MAX_AUTOR 50
 
 FILE *arc1;
 FILE *arc2;
@@ -96,7 +96,7 @@ int menu () {
 	printf("7. Buscar usuarios\n");
 	printf("8. Eliminar usuario\n");
 	printf("9. Salir\n");
-	printf("INGRESE UNA OPCION ENTRE 1 Y 11: ");
+	printf("INGRESE UNA OPCION ENTRE 1 Y 7: ");
 	fflush(stdin);
 	scanf("%d", &opcion);
 	

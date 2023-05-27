@@ -175,7 +175,7 @@ void prestarLibro() {
     usuario user;
     
     printf("Ingrese la fecha del pr%cstamo (DD-MM-AAAA): ", 130);
-	scanf("%d-%d-%d", &prestamo.date_start.day, prestamo.date_start.moth, prestamo.date_start.year);
+	scanf("%d-%d-%d", &prestamo.date_start.day, prestamo.date_start.month, prestamo.date_start.year);
     
     if (book.is_valid) {
     	if (book.disponible) {
@@ -288,6 +288,5 @@ int main() {
 	}while(op != 8);
 	return 0;
 	}
-    
     
 
