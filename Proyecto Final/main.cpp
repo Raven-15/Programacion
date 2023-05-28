@@ -1,292 +1,286 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>//para poder usar bool
+#include <ctype.h>   
+#include <time.h>    
 #include "LibraryProject.h"
 
-#define MAX_LIBROS 200 
-#define MAX_TITULO 100 
-#define MAX_AUTOR 50 
+#define MAX_LIBROS 200
+#define MAX_TITULO 100
+#define MAX_AUTOR 50
 #define MAX_USUARIOS 200
 
-FILE *arc3;
-FILE *arc4;
-FILE *arc5;
-
+typedef struct {
+    int code;
+    char name[MAX_USUARIOS];
+    int is_valid;
+} usuario;
 
 typedef struct {
-	int code;
-	char name [MAX_USUARIOS];
-	bool is_valid = false;
-}usuario;
+    int is_valid;
+    char titulo[MAX_TITULO];
+    char autor[MAX_AUTOR];
+    char disponible;
+    int numPag;
+} libro;
 
 typedef struct {
-	bool is_valid = false;
-	char titulo[MAX_TITULO];
-	char autor[MAX_AUTOR];
-	char disponible;
-	int numPag;
-	
-}libro;
+    int is_valid;
+    char titulo[MAX_TITULO];
+    int code;
+    char date_start[128];
+    char date_finish[128];
+} prestamo;
 
-typedef struct {
-	bool is_valid = false;
-	char titulo[MAX_TITULO];
-	int code;
-	char date_start[128];
-	char date_finish[128] = "";	
-}prestamo;
-
-libro buscarLibro(bool print) {
-	
-	char titulo[MAX_TITULO];
-	libro book;
+libro buscarLibro(int print) {
+    char titulo[MAX_TITULO];
+    libro book;
     int encontrado = 0;
-    
-	printf("Por favor ingresar el t%ctulo del libro: ", 161);
-	scanf("%s", &titulo);
 
-	arc3 = fopen("libro.txt", "r");
-	
-	if(arc3 == NULL) {
-		printf("Error al abrir el archivo.\n");
-	}else {
-		while(fread(&book, sizeof(book), 1, arc3) == 1) {
-			if(strcmp(book.titulo, titulo) == 0) {
-	        	int pos = ftell(arc3);
-	        	if(print){
-	        		printf("El puntero se encuentra en la posici%cn: %d\n", 162, pos);
-		       
-				    printf("Resultado de la b%csqueda:\n", 163);
-			    	printf("T%ctulo: %s\n", 161, book.titulo);
-			    	printf("Autor: %s\n", book.autor);
-			    	printf("N%cmero de p%cginas: %d\n", 163, 160);
-			    	printf("Disponible: %s\n", boolToString(book.disponible));
-			        printf("\n--------------------------\n");
-				}
-		        
-		    	encontrado = 1;
-		        break;
-			}
-		}
-	}
-	fclose(arc3);
-	arc3 = NULL;
+    printf("Por favor ingresar el título del libro: ");
+    scanf("%s", titulo);
+
+    FILE *arc3 = fopen("libro.txt", "r");
+
+    if (arc3 == NULL) {
+        printf("Error al abrir el archivo.\n");
+    } else {
+        while (fread(&book, sizeof(book), 1, arc3) == 1) {
+            if (strcmp(book.titulo, titulo) == 0) {
+                int pos = ftell(arc3);
+                if (print) {
+                    printf("El puntero se encuentra en la posición: %d\n", pos);
+
+                    printf("Resultado de la búsqueda:\n");
+                    printf("Título: %s\n", book.titulo);
+                    printf("Autor: %s\n", book.autor);
+                    printf("Número de páginas: %d\n", book.numPag);
+                    printf("Disponible: %s\n", book.disponible ? "Sí" : "No");
+                    printf("--------------------------\n");
+                }
+
+                encontrado = 1;
+                break;
+            }
+        }
+        fclose(arc3);
+    }
 
     if (!encontrado) {
-        printf("No se encontro el  libro con el titulo ingresado.\n");
+        printf("No se encontró el libro con el título ingresado.\n");
     }
-    
+
     return book;
 }
 
 usuario agregarUsuario() {
-	usuario client;
-	printf("\nPor favor ingresar la identificaci%cn del cliente: ", 162);
-	scanf("%d", &client.code);
-	
-	printf("Por favor ingresar el nombre del cliente: ");
-	fflush(stdin);
-	gets(client.name);
+    usuario client;
 
-	client.is_valid = true;
-	
-	arc3 = fopen("usuario.txt", "a");
-	
-	if (arc3 == NULL ) {
-		printf("Error al abrir el archivo\n");
-		exit(EXIT_FAILURE);
-	} else {
-		fwrite(&client, sizeof(client), 1, arc3);
-		fclose(arc3);
-		arc3 = NULL;
-	}
-	
-	printf("Documento: %d\n", client.code);
-	printf("Nombre: %s\n", client.name);
-	return client;
+    printf("\nPor favor ingresar la identificación del cliente: ");
+    scanf("%d", &client.code);
+
+    printf("Por favor ingresar el nombre del cliente: ");
+    scanf("%s", client.name);
+
+    client.is_valid = 1;
+
+    FILE *arc3 = fopen("usuario.txt", "a");
+
+    if (arc3 == NULL) {
+        printf("Error al abrir el archivo\n");
+        exit(EXIT_FAILURE);
+    } else {
+        fwrite(&client, sizeof(client), 1, arc3);
+        fclose(arc3);
+    }
+
+    printf("Documento: %d\n", client.code);
+    printf("Nombre: %s\n", client.name);
+
+    return client;
 }
 
-usuario buscarUsuario(int code = NULL) {
-
+usuario buscarUsuario(int code) {
     usuario client;
     int encontrado = 0;
-	char confirmation;
-	bool print = true;
+    char confirmation;
+    int print = 1;
 
-	if(!code){
-		printf("Por favor ingresar la identificaci%cn del cliente: ", 162);
-		scanf("%d", &code);
+    printf("Está seguro que la identificación %d está correcta? Si[S]  No[N]: ", code);
+    scanf(" %c", &confirmation);
+    confirmation = toupper((unsigned char)confirmation);  // Convertir a mayúsculas
 
-		printf("Est%c seguro que la identificaci%cn %d est%c correcta? Si[S]  No[N]: ", 160, 162, code, 160);
-		fflush(stdin);
-		scanf("%c", &confirmation);
-		confirmation = tuper(confirmation);
-	} else {
-		confirmation = 'S';
-		print = false;
-	}
+    if (confirmation == 'S') {
+        FILE *arc3 = fopen("usuario.txt", "rb");
 
-	if(confirmation == 'S') {
+        if (arc3 == NULL) {
+            printf("Error al abrir el archivo\n");
+        } else {
+            while (fread(&client, sizeof(client), 1, arc3)) {
+                if (client.code == code) {
+                    if (print) {
+                        printf("Documento: %d\n", client.code);
+                        printf("Nombre: %s\n", client.name);
+                        encontrado = 1;
+                    }
+                    break;
+                }
+            }
+            fclose(arc3);
+        }
+    }
 
-		arc3 = fopen("usuario.txt", "rb");
+    if (!encontrado) {
+        printf("No se encontró el usuario con la identificación ingresada.\n");
+    }
 
-		if (arc3 == NULL) {
-			printf("Error al abrir el archivo\n");
-		} else {
-			while (fread(&client, sizeof(client), 1, arc3)) { 
-				
-				long pos = ftell(arc3);
-				
-				if (client.code == code) { 
-				
-				    if(print){
-						printf("Documento: %d\n", client.code);
-						printf("Nombre: %s\n", client.name);
-					}
-					
-					encontrado = 1;
-					break; 
-				}
-			}
-			fclose(arc3);
-			arc3 = NULL;
-
-			if (!encontrado) {
-				printf("No se encontr%c el cliente con el c%cdigo ingresado\n", 162, 162);
-			}
-		}
-
-	} else {
-		buscarUsuario();
-	}
-
-	return client;
-
+    return client;
 }
 
 void prestarLibro() {
-	
-	char titulo[MAX_TITULO];
-	libro book;
-	int code;
-    
-    book = buscarLibro(false);
-    usuario user;
-    
-    printf("Ingrese la fecha del pr%cstamo (DD-MM-AAAA): ", 130);
-	scanf("%d-%d-%d", &prestamo.date_start.day, prestamo.date_start.month, prestamo.date_start.year);
-    
-    if (book.is_valid) {
-    	if (book.disponible) {
-    		printf("Por favor ingresar la identificaci%cn del usuario: ", 162);
-			scanf("%d", &code);
-			user = buscarUsuario(code);
-			printf("Documento: %d\n", user.code);
-			printf("Nombre: %s\n", user.name);
-		} else {
-			printf("El libro con el t%ctulo ingresado no esta disponible.\n", 161);
-		}
-	}
-	
-    FILE *arch = fopen("prestamos.txt", "a");
-    
-    if(arch == NULL) {
-    	printf("Error al crear el archivo.\n");
-    	return;
-	}
-	
-	fprintf(arch, "T%ctulo: %s", 161, prestamo.titulo);
-	fprintf(arch, "Autor: %s", prestamo.autor);
-	fprintf(arch, "Documento del prestatario: %d", prestamo.code);
-	fprintf(arch, "Fecha de pr%cstamo", 130, prestamo.date_start);
-	
-	fclose(arch);
-	
-	printf("El pr%cstamo ha sido exitoso.\n", 130);
+    usuario client;
+    libro book;
+    prestamo loan;
+    char confirmation;
+    int code;
+    int print = 1;
+
+    printf("\nPor favor ingresar la identificación del cliente: ");
+    scanf("%d", &code);
+
+    client = buscarUsuario(code);
+
+    if (client.is_valid) {
+        book = buscarLibro(print);
+
+        if (book.is_valid) {
+            printf("Está seguro que desea prestar el libro %s? Si[S]  No[N]: ", book.titulo);
+            scanf(" %c", &confirmation);
+            confirmation = toupper((unsigned char)confirmation);  // Convertir a mayúsculas
+
+            if (confirmation == 'S') {
+                time_t t = time(NULL);
+                struct tm *tm = localtime(&t);
+                strftime(loan.date_start, sizeof(loan.date_start), "%Y-%m-%d %H:%M:%S", tm);
+
+                strcpy(loan.titulo, book.titulo);
+                loan.code = client.code;
+                loan.is_valid = 1;
+
+                FILE *arc3 = fopen("prestamo.txt", "a");
+
+                if (arc3 == NULL) {
+                    printf("Error al abrir el archivo\n");
+                    exit(EXIT_FAILURE);
+                } else {
+                    fwrite(&loan, sizeof(loan), 1, arc3);
+                    fclose(arc3);
+                }
+
+                printf("El libro %s ha sido prestado correctamente.\n", book.titulo);
+            }
+        }
+    }
 }
 
 void devolverLibro() {
-	char titulo[MAX_TITULO];
-    Libro book;
+    usuario client;
+    libro book;
+    prestamo loan;
+    char confirmation;
     int code;
-    
-    book = buscarLibro(true);
-    Usuario usua;
-    
-    printf("Ingrese la fecha de devolución (DD-MM-AAAA): ");
-    scanf("%d-%d-%d", &prestamo.date_finish.day, &prestamo.date_finish.month, &prestamo.date_finish.year);
-    
-    if (book.is_valid) {
-        printf("Por favor ingrese la identificaci%cn del usuario: ", 162);
-        scanf("%d", &code);
-        user = buscarUsuario(code);
-        printf("Documento: %d\n", usua.code);
-        printf("Nombre: %s\n", usua.name);
-    } else {
-        printf("El libro no tiene un pr%cstamo registrado.\n", 130);
-        return;
+    int print = 1;
+
+    printf("\nPor favor ingresar la identificación del cliente: ");
+    scanf("%d", &code);
+
+    client = buscarUsuario(code);
+
+    if (client.is_valid) {
+        book = buscarLibro(print);
+
+        if (book.is_valid) {
+            printf("Está seguro que desea devolver el libro %s? Si[S]  No[N]: ", book.titulo);
+            scanf(" %c", &confirmation);
+            confirmation = toupper((unsigned char)confirmation);  // Convertir a mayúsculas
+
+            if (confirmation == 'S') {
+                time_t t = time(NULL);
+                struct tm *tm = localtime(&t);
+                strftime(loan.date_finish, sizeof(loan.date_finish), "%Y-%m-%d %H:%M:%S", tm);
+
+                strcpy(loan.titulo, book.titulo);
+                loan.code = client.code;
+                loan.is_valid = 1;
+
+                FILE *arc3 = fopen("prestamo.txt", "a");
+
+                if (arc3 == NULL) {
+                    printf("Error al abrir el archivo\n");
+                    exit(EXIT_FAILURE);
+                } else {
+                    fwrite(&loan, sizeof(loan), 1, arc3);
+                    fclose(arc3);
+                }
+
+                printf("El libro %s ha sido devuelto correctamente.\n", book.titulo);
+            }
+        }
     }
-    
-    FILE *arch = fopen("devoluciones.txt", "a");
-    
-    if (arch == NULL) {
-        printf("Error al crear el archivo.\n");
-        return;
-    }
-    
-    fprintf(arch, "T%ctulo: %s\n", book.titulo);
-    fprintf(arch, "Autor: %s\n", book.autor);
-    fprintf(arch, "Documento del prestatario: %d\n", user.code);
-    fprintf(arch, "Fecha de pr%cstamo: %d-%d-%d\n", 130, prestamo.date_start.day, prestamo.date_start.month, prestamo.date_start.year);
-    fprintf(arch, "Fecha de devoluci%cn: %d-%d-%d\n", 162, prestamo.date_finish.day, prestamo.date_finish.month, prestamo.date_finish.year);
-    
-    fclose(arch);
-    
-    printf("La devoluci%cn del libro ha sido exitosa.\n", 162);
 }
 
 
-int main() {
-    
-    int op;
-    
-    do {
-    	system("CLS");
-    	op = menu();
-    	
-    	switch(op){
-    		case 1:
-    			agregarLibro();
-    			break;
-    		case 2:
-    			mostrarBiblioteca();
-    			break;
-    		case 3:
-    			buscarLibro(true);
-    			break;
-    		case 4:
-    			prestarLibro();
-    			break;
-    		case 5:
-    			devolverLibro();
-    			break;
-    		case 6:
-    			agregarUsuario();
-    			break;
-    		case 7:
-    			buscarUsuario();
-    			break;
-    		case 8:
-    			printf("¡Gracias por usar el sistema de la biblioteca!\n");
-    			break;
-    		default:
-    			printf("Ha ingresado una opcion incorrecta. Solo numeros del 1 al 8!!!\n\n");
-    			break;
-		}
-		system("PAUSE");
-	}while(op != 8);
-	return 0;
-	}
-    
 
+int main() {
+    int opcion;
+
+    do {
+        printf("Seleccione una opción:\n");
+        printf("1. Agregar usuario\n");
+        printf("2. Buscar usuario\n");
+        printf("3. Borrar usuario\n");
+        printf("4. Agregar libro\n");
+        printf("5. Prestar libro\n");
+        printf("6. Devolver libro\n");
+        printf("7. Borrar libro\n");
+        printf("8. Salir\n");
+        printf("Opción: ");
+        scanf("%d", &opcion);
+
+        switch (opcion) {
+            case 1:
+                agregarUsuario();
+                break;
+            case 2: {
+                int code;
+                printf("Por favor ingresar la identificación del cliente: ");
+                scanf("%d", &code);
+                buscarUsuario(code);
+                break;
+            }
+            case 3:
+            	borrarCliente();
+            	break;
+            case 4:
+                agregarLibro();
+                break;
+            case 5:
+                prestarLibro();
+                break;
+            case 6:
+                devolverLibro();
+                break;
+            case 7:
+            	borrarLibro();
+            	break;
+            case 8:
+                exit(EXIT_SUCCESS);
+                break;
+            default:
+                printf("Opción no válida\n");
+                break;
+        }
+    } while (opcion != 8);
+
+    return 0;
+}

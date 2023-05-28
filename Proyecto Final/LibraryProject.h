@@ -4,8 +4,11 @@
 int menu();
 void agregarLibro();
 void mostrarBiblioteca();
+void agregarLibro();
 const char* boolToString(bool value);
 char tuper(char letter);
+void borrarLibro();
+void borrarCliente();
 //void buscarLibro();
 void prestarLibro();
 /*void devolverLibro();

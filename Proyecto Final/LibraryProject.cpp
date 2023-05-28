@@ -1,23 +1,40 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>   
+#include <time.h>    
 #include "LibraryProject.h"
 
 #define MAX_LIBROS 200
 #define MAX_TITULO 100
 #define MAX_AUTOR 50
+#define MAX_USUARIOS 200
 
 FILE *arc1;
 FILE *arc2;
 
 
 typedef struct {
-	bool is_valid;
-	char titulo[MAX_TITULO];
-	char autor[MAX_AUTOR];
-	bool disponible;
-	int numPag;
-	
-}libro;
+    int code;
+    char name[MAX_USUARIOS];
+    int is_valid;
+} usuario;
+
+typedef struct {
+    int is_valid;
+    char titulo[MAX_TITULO];
+    char autor[MAX_AUTOR];
+    char disponible;
+    int numPag;
+} libro;
+
+typedef struct {
+    int is_valid;
+    char titulo[MAX_TITULO];
+    int code;
+    char date_start[128];
+    char date_finish[128];
+} prestamo;
 
 void agregarLibro() {
 	
@@ -83,22 +100,76 @@ char tuper(char letter){
     return letter;
 }
 
-int menu () {
-	
-	int opcion;
-	printf("\n LA CASA DEL LIBRO\n\n");
-	printf("1. Agregar libro\n");
-	printf("2. Mostrar biblioteca\n");
-	printf("3. Buscar libro\n");
-	printf("4. Prestar libro\n");
-	printf("5. Devolver libro\n");
-	printf("6. Agregar usuario\n");
-	printf("7. Buscar usuarios\n");
-	printf("8. Eliminar usuario\n");
-	printf("9. Salir\n");
-	printf("INGRESE UNA OPCION ENTRE 1 Y 7: ");
-	fflush(stdin);
-	scanf("%d", &opcion);
-	
-	return opcion;
+void borrarLibro() {
+    char titulo[MAX_TITULO];
+    printf("\nPor favor ingresar el título del libro a borrar: ");
+    scanf("%s", titulo);
+
+    FILE *arc3 = fopen("libro.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+
+    if (arc3 == NULL || temp == NULL) {
+        printf("Error al abrir el archivo\n");
+        exit(EXIT_FAILURE);
+    } else {
+        libro book;
+        int encontrado = 0;
+
+        while (fread(&book, sizeof(book), 1, arc3) == 1) {
+            if (strcmp(book.titulo, titulo) != 0) {
+                fwrite(&book, sizeof(book), 1, temp);
+            } else {
+                encontrado = 1;
+            }
+        }
+
+        fclose(arc3);
+        fclose(temp);
+
+        if (encontrado) {
+            remove("libro.txt");
+            rename("temp.txt", "libro.txt");
+            printf("El libro con título %s ha sido borrado exitosamente.\n", titulo);
+        } else {
+            remove("temp.txt");
+            printf("No se encontró un libro con el título ingresado.\n");
+        }
+    }
+}
+
+void borrarCliente() {
+    int code;
+    printf("\nPor favor ingresar la identificación del cliente a borrar: ");
+    scanf("%d", &code);
+
+    FILE *arc3 = fopen("usuario.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+
+    if (arc3 == NULL || temp == NULL) {
+        printf("Error al abrir el archivo\n");
+        exit(EXIT_FAILURE);
+    } else {
+        usuario client;
+        int encontrado = 0;
+
+        while (fread(&client, sizeof(client), 1, arc3) == 1) {
+            if (client.code != code) {
+                fwrite(&client, sizeof(client), 1, temp);
+            } else {
+                encontrado = 1;
+            }
+        }
+
+        fclose(arc3);
+        fclose(temp);
+
+        if (encontrado) {
+            remove("usuario.txt");
+            rename("temp.txt", "usuario.txt");
+            printf("El cliente con identificación %d ha sido borrado exitosamente.\n", code);
+        } else {
+            remove("temp.txt");
+            printf("No se encontró un cliente con la identificación ingresada.\n");
+        }
+    }
 }
