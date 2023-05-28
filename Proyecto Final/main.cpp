@@ -235,7 +235,7 @@ int main() {
     int opcion;
 
     do {
-        printf("Seleccione una opción:\n");
+        printf("Seleccione una opción: \n\n");
         printf("1. Agregar usuario\n");
         printf("2. Buscar usuario\n");
         printf("3. Borrar usuario\n");
